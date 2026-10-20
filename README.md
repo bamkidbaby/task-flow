@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Taskflow
 
-## Getting Started
+A personal task manager built with Next.js App Router, TypeScript, Tailwind CSS, Better Auth, Prisma, SQLite, and Zod.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Email/password registration, login, logout, hashed credentials, and Better Auth sessions.
+- Authenticated dashboard with create, edit, complete, and delete task operations.
+- Server-side Zod validation and ownership checks on every task mutation.
+- SQLite persistence and a versioned Prisma migration.
+
+## Project structure
+
+```text
+src/app/                 Pages, route handler, and server actions
+src/components/          Client-side auth and task UI
+src/lib/                 Better Auth and Prisma clients
+prisma/schema.prisma     Database schema
+prisma/migrations/       Applied Prisma migrations
+prisma.config.ts         Prisma 7 configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Install and run
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Install Node.js 20.19+ (Node 22 or 24 is recommended), then install dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   npm install
+   ```
 
-## Learn More
+2. Copy the example environment file and set a unique secret with at least 32 characters:
 
-To learn more about Next.js, take a look at the following resources:
+   ```powershell
+   Copy-Item .env.example .env
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Create/update the SQLite database and generated client:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm run db:migrate -- --name init
+   npm run db:generate
+   ```
 
-## Deploy on Vercel
+4. Start the application:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open http://localhost:3000. Register a new account, then create tasks from the dashboard.
+
+## Validation commands
+
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+## Environment variables
+
+`DATABASE_URL` is a local SQLite connection string, normally `file:./dev.db`.
+
+`BETTER_AUTH_SECRET` must be a high-entropy value of at least 32 characters and must never be committed. `BETTER_AUTH_URL` is the application base URL, such as `http://localhost:3000` during local development.
